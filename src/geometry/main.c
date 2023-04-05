@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "libgeometry/geometry.h"
 
-struct geometry figure;
-struct geometry figure_2;
-struct geometry figure_3;
+#include "libgeometry/geometry.h"
 
 int main()
 {
     int size = 0,counter = 0,counter_2 = 0,counter_3 = 0,counter_4 = 0;
     int point = 0,point_2 = 0,point_3 = 0;
     char arr[100],arr_2[100],arr_3[100],fill;
+    struct geometry figure,figure_2,figure_3;
 
     while((fill = getchar()) != '\n'){
         arr[size] = fill;
