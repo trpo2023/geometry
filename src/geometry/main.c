@@ -1,5 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
+#define ASCII_min_number 47
+#define ASCII_max_number 58
 
 #include "libgeometry/geometry.h"
 
@@ -9,6 +11,10 @@ int main()
     int point = 0, point_2 = 0, point_3 = 0;
     char arr[100], arr_2[100], arr_3[100], fill;
     struct geometry figure,figure_2,figure_3;
+    figure.number = figure.x = figure.y = 0.0;
+    figure_2.number = figure_2.x = figure_2.y = 0.0;
+    figure_3.number = figure_3.x = figure_3.y = 0.0;
+    
 
     while ((fill = getchar()) != '\n') {
         arr[size] = fill;
@@ -18,7 +24,7 @@ int main()
     if (check_syntax_3(arr, size) == true) {
         while (arr[index_arr] != '.') {
             int x = arr[index_arr];
-            if (x > 47 && x < 58)
+            if (x > ASCII_min_number && x < ASCII_max_number)
                 index_arr_2++;
 
             index_arr++;
@@ -29,7 +35,7 @@ int main()
 
         while (arr[index_arr] != '.') {
             int x = arr[index_arr];
-            if (x > 47 && x < 58)
+            if (x > ASCII_min_number && x < ASCII_max_number)
                 index_arr_3++;
 
             index_arr++;
@@ -69,7 +75,7 @@ int main()
     if (check_syntax_3(arr_2, size) == true) {
         while (arr_2[index_arr] != '.') {
             int x = arr_2[index_arr];
-            if (x > 47 && x < 58)
+            if (x > ASCII_min_number && x < ASCII_max_number)
                 index_arr_2++;
 
             index_arr++;
@@ -80,7 +86,7 @@ int main()
 
         while (arr_2[index_arr] != '.') {
             int x = arr_2[index_arr];
-            if (x > 47 && x < 58)
+            if (x > ASCII_min_number && x < ASCII_max_number)
                 index_arr_3++;
 
             index_arr++;
@@ -91,7 +97,7 @@ int main()
 
         while (arr_2[index_arr] != '.') {
             int x = arr_2[index_arr];
-            if (x > 47 && x < 58)
+            if (x > ASCII_min_number && x < ASCII_max_number)
                 index_arr_4++;
 
             index_arr++;
