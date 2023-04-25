@@ -1,13 +1,11 @@
 #include <stdbool.h>
 #include <stdio.h>
-#define ASCII_min_number 47
-#define ASCII_max_number 58
 
-#include "libgeometry/geometry.h"
+#include <libgeometry/geometry.h>
 
 int main()
 {
-    int size = 0, index_arr = 0, index_arr_2 = 0, index_arr_3 = 0, index_arr_4 = 0;
+    int size = 0, index_arr = 0, search_point_1 = 0, search_point_2 = 0, search_point_3 = 0;
     int point = 0, point_2 = 0, point_3 = 0;
     char arr[100], arr_2[100], arr_3[100], fill;
     struct geometry figure,figure_2,figure_3;
@@ -15,56 +13,39 @@ int main()
     figure_2.number = figure_2.x = figure_2.y = 0.0;
     figure_3.number = figure_3.x = figure_3.y = 0.0;
     
-
     while ((fill = getchar()) != '\n') {
         arr[size] = fill;
         size++;
     }
 
-    if (check_syntax_3(arr, size) == true) {
-        while (arr[index_arr] != '.') {
-            int x = arr[index_arr];
-            if (x > ASCII_min_number && x < ASCII_max_number)
-                index_arr_2++;
-
-            index_arr++;
-        }
+    if (check_syntax_extra_character(arr, size) == true) {
+        search_point_1 = search_elements(arr,index_arr);
+        index_arr = search_index_point(arr,index_arr);
 
         point = index_arr;
         index_arr += 2;
 
-        while (arr[index_arr] != '.') {
-            int x = arr[index_arr];
-            if (x > ASCII_min_number && x < ASCII_max_number)
-                index_arr_3++;
-
-            index_arr++;
-        }
+        search_point_2 = search_elements(arr,index_arr);
+        index_arr = search_index_point(arr,index_arr);
 
         point_2 = index_arr;
         index_arr += 2;
 
-        while (arr[index_arr] != '.') {
-            int x = arr[index_arr];
-            if (x > 47 && x < 58)
-                index_arr_4++;
-
-            index_arr++;
-        }
+        search_point_3 = search_elements(arr,index_arr);
+        index_arr = search_index_point(arr,index_arr);
 
         point_3 = index_arr;
 
-        figure.x = reading_elements(figure.x, arr, index_arr_2, point);
+        figure.x = reading_elements(figure.x, arr, search_point_1, point);
+        figure.y = reading_elements(figure.y, arr, search_point_2, point_2);
+        figure.number = reading_elements(figure.number, arr, search_point_3, point_3);
 
-        figure.y = reading_elements(figure.y, arr, index_arr_3, point_2);
-
-        figure.number = reading_elements(figure.number, arr, index_arr_4, point_3);
-
-        circle(figure.number);
+        circle_perimeter(figure.number);
+        circle_area(figure.number);
         printf("\n");
     }
 
-    size = index_arr = index_arr_2 = index_arr_3 = index_arr_4 = 0;
+    size = index_arr = search_point_1 = search_point_2 = search_point_3 = 0;
     point = point_2 = point_3 = 0;
 
     while ((fill = getchar()) != '\n') {
@@ -72,69 +53,34 @@ int main()
         size++;
     }
 
-    if (check_syntax_3(arr_2, size) == true) {
-        while (arr_2[index_arr] != '.') {
-            int x = arr_2[index_arr];
-            if (x > ASCII_min_number && x < ASCII_max_number)
-                index_arr_2++;
-
-            index_arr++;
-        }
+    if (check_syntax_extra_character(arr_2, size) == true) {
+        search_point_1 = search_elements(arr_2,index_arr);
+        index_arr = search_index_point(arr_2,index_arr);
 
         point = index_arr;
         index_arr += 2;
 
-        while (arr_2[index_arr] != '.') {
-            int x = arr_2[index_arr];
-            if (x > ASCII_min_number && x < ASCII_max_number)
-                index_arr_3++;
-
-            index_arr++;
-        }
+        search_point_2 = search_elements(arr_2,index_arr);
+        index_arr = search_index_point(arr_2,index_arr);
 
         point_2 = index_arr;
         index_arr += 2;
 
-        while (arr_2[index_arr] != '.') {
-            int x = arr_2[index_arr];
-            if (x > ASCII_min_number && x < ASCII_max_number)
-                index_arr_4++;
-
-            index_arr++;
-        }
+        search_point_3= search_elements(arr_2,index_arr);
+        index_arr = search_index_point(arr_2,index_arr);
 
         point_3 = index_arr;
 
-        figure_2.x = reading_elements(figure_2.x, arr_2, index_arr_2, point);
+        figure_2.x = reading_elements(figure_2.x, arr_2, search_point_1, point);
+        figure_2.y = reading_elements(figure_2.y, arr_2, search_point_2, point_2);
+        figure_2.number = reading_elements(figure_2.number, arr_2, search_point_3, point_3);
 
-        figure_2.y = reading_elements(figure_2.y, arr_2, index_arr_3, point_2);
-
-        figure_2.number = reading_elements(figure_2.number, arr_2, index_arr_4, point_3);
-
-        circle(figure_2.number);
-
-        float figure2_figureX, figure2_figureY;
-
-        if (figure_2.x > figure.x) {
-            figure2_figureX = figure_2.x - figure.x;
-        } else {
-            figure2_figureX = figure.x - figure_2.x;
-        }
-
-        if (figure_2.y > figure.y) {
-            figure2_figureY = figure_2.y - figure.y;
-        } else {
-            figure2_figureY = figure.y - figure_2.y;
-        }
-
-        printf("intersects:\n");
-
-        if (figure.number + figure_2.number > figure2_figureX
-            && figure.number + figure_2.number > figure2_figureY)
-            printf("1. circle\n\n");
+        circle_perimeter(figure_2.number);
+        circle_area(figure_2.number);
+        intersects_figure_2(figure,figure_2);
     }
 
-    size = index_arr = index_arr_2 = index_arr_3 = index_arr_4 = 0;
+    size = index_arr = search_point_1 = search_point_2 = search_point_3 = 0;
     point = point_2 = point_3 = 0;
 
     while ((fill = getchar()) != '\n') {
@@ -142,82 +88,31 @@ int main()
         size++;
     }
 
-    if (check_syntax_3(arr_3, size) == true) {
-        while (arr_3[index_arr] != '.') {
-            int x = arr_3[index_arr];
-            if (x > 47 && x < 58)
-                index_arr_2++;
-
-            index_arr++;
-        }
+    if (check_syntax_extra_character(arr_3, size) == true) {
+        search_point_1 = search_elements(arr_3,index_arr);
+        index_arr = search_index_point(arr_3,index_arr);
 
         point = index_arr;
         index_arr += 2;
 
-        while (arr_3[index_arr] != '.') {
-            int x = arr_3[index_arr];
-            if (x > 47 && x < 58)
-                index_arr_3++;
-
-            index_arr++;
-        }
+        search_point_2 = search_elements(arr_3,index_arr);
+        index_arr = search_index_point(arr_3,index_arr);
 
         point_2 = index_arr;
         index_arr += 2;
 
-        while (arr_3[index_arr] != '.') {
-            int x = arr_3[index_arr];
-            if (x > 47 && x < 58)
-                index_arr_4++;
-
-            index_arr++;
-        }
+        search_point_3 = search_elements(arr_3,index_arr);
+        index_arr = search_index_point(arr_3,index_arr);
 
         point_3 = index_arr;
 
-        figure_3.x = reading_elements(figure_3.x, arr_3, index_arr_2, point);
+        figure_3.x = reading_elements(figure_3.x, arr_3, search_point_1, point);
+        figure_3.y = reading_elements(figure_3.y, arr_3, search_point_2, point_2);
+        figure_3.number = reading_elements(figure_3.number, arr_3, search_point_3, point_3);
 
-        figure_3.y = reading_elements(figure_3.y, arr_3, index_arr_3, point_2);
-
-        figure_3.number = reading_elements(figure_3.number, arr_3, index_arr_4, point_3);
-
-        circle(figure_3.number);
-
-        float figure3_figure2X, figure3_figureX, figure3_figure2Y,figure3_figureY;
-
-        if (figure_3.x > figure.x) {
-            figure3_figureX = figure_3.x - figure.x;
-        } else {
-            figure3_figureX = figure.x - figure_3.x;
-        }
-
-        if (figure_3.x > figure_2.x) {
-            figure3_figure2X = figure_3.x - figure_2.x;
-        } else {
-            figure3_figure2X = figure_2.x - figure_3.x;
-        }
-
-        if (figure_3.y > figure.y) {
-            figure3_figureY = figure_3.y - figure.y;
-        } else {
-            figure3_figureY = figure.y - figure_3.y;
-        }
-
-        if (figure_3.y > figure_2.y) {
-            figure3_figure2Y = figure_3.y - figure_2.y;
-        } else {
-            figure3_figure2Y = figure_2.y - figure_3.y;
-        }
-
-        printf("intersects:\n");
-
-        if (figure.number + figure_3.number > figure3_figureX
-            && figure.number + figure_3.number > figure3_figureY)
-            printf("1. circle\n");
-
-        if (figure_3.number + figure_2.number > figure3_figure2X
-            && figure_3.number + figure_2.number > figure3_figure2Y)
-            printf("2. circle\n");
+        circle_perimeter(figure_3.number);
+        circle_area(figure_3.number);
+        intersects_figure_3(figure,figure_2,figure_3);
     }
     return 0;
 }

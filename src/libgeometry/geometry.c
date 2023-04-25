@@ -2,21 +2,35 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "geometry.h"
-
-void circle(float R)
+#include <libgeometry/geometry.h>
+ 
+float circle_perimeter(float R)
 {
-    float C, S;
+    float C;
 
     C = 2.0 * M_PI * R;
-    S = M_PI * R * R;
 
-    printf("perimeter = %.2f\n", C);
-    printf("area = %.2f\n", S);
+    printf("perimeter = %f\n", C);
+    return C;
+}
+
+float circle_area(float R)
+{
+    float S;
+
+    S = M_PI * R * R;
+    printf("area = %f\n", S);
+    return S;
 }
 
 int degree(int x, int y)
 {
+    if(y == 0){
+        return 1;
+    }else if(y < 0){
+        return -1;
+    }   
+
     int result = 1;
 
     for (int n = 1; n <= y; n++) {
@@ -26,21 +40,19 @@ int degree(int x, int y)
     return result;
 }
 
-bool check_syntax(char* arr)
+bool check_read_circle(char* arr)
 {
     if (arr[0] != 'c' || arr[1] != 'i' || arr[2] != 'r' || arr[3] != 'c'
-        || arr[4] != 'l' || arr[5] != 'e'
-        || (arr[6] == ' ' && ((int)arr[7] > 41 || (int)arr[7] < 40))
-        || ((int)arr[6] > 41 || (int)arr[6] < 40)) {
+        || arr[4] != 'l' || arr[5] != 'e' || (int)arr[6] > 41 || (int)arr[6] < 40) {
         printf("Error at column 0: expected 'circle'\n");
         return false;
     } 
     return true;
 }
 
-bool check_syntax_2(char* arr,int size)
+bool check_syntax_bracket(char* arr,int size)
 {
-    if(check_syntax(arr) == true){
+    if(check_read_circle(arr) == true){
         int counter = 0, counter_2 = 0;
         int test = 0, test_3 = 0;
 
@@ -72,19 +84,26 @@ bool check_syntax_2(char* arr,int size)
     return true;
 }
 
-bool check_syntax_3(char *arr, int size)
+bool check_syntax_extra_character(char *arr, int size)
 {
-    if(check_syntax_2(arr,size) == true){
-        if(arr[size - 1] != ')' || (arr[size - 2] == ')' && arr[size - 1] != ' ')) {
-            printf("Error at column %d: unexpected token\n", size);
-            return false;
+    if(check_syntax_bracket(arr,size) == true){
+        if(arr[size - 1] == ' '){
+            if(arr[size - 2] == ')'){
+                printf("Error at column %d: unexpected token\n", size);
+                return false;
+            }
+        }else{
+            if(arr[size - 1] != ')'){
+                printf("Error at column %d: unexpected token\n", size);
+                return false;
+            }
         }
     }else{
         return false;
     }
     return true;
 }
-
+ 
 float reading_elements(float elements, char* arr, int count_digits, int size)
 {
     int counter = 0;
@@ -94,8 +113,7 @@ float reading_elements(float elements, char* arr, int count_digits, int size)
         if (x > 47 && x < 58) {
             counter++;
             int y = arr[size + 1];
-            elements += (x - 48) * degree(10, count_digits - 1)
-                    + (y - 48) / 10.0;
+            elements += (x - 48) * degree(10, count_digits - 1) + (y - 48) / 10.0;
             count_digits--;
 
             if (counter > 1)
@@ -103,4 +121,101 @@ float reading_elements(float elements, char* arr, int count_digits, int size)
         }
     }
     return elements;
+}
+
+int search_index_point(char *arr,int index_arr)
+{
+    while (arr[index_arr] != '.') {
+            index_arr++;
+        }
+    return index_arr;
+}
+
+int search_elements(char *arr,int index_arr)
+{
+    int search_point = 0;
+
+    while (arr[index_arr] != '.') {
+            int x = arr[index_arr];
+            if (x > ASCII_min_number && x < ASCII_max_number)
+                search_point++;
+
+            index_arr++;
+        }
+    return search_point;
+}
+
+bool intersects_figure_2(struct geometry figure,struct geometry figure_2)
+{
+    float figure2_figureX, figure2_figureY;
+
+        if (figure_2.x > figure.x) {
+            figure2_figureX = figure_2.x - figure.x;
+        } else {
+            figure2_figureX = figure.x - figure_2.x;
+        }
+
+        if (figure_2.y > figure.y) {
+            figure2_figureY = figure_2.y - figure.y;
+        } else {
+            figure2_figureY = figure.y - figure_2.y;
+        }
+
+        printf("intersects:\n");
+
+        if (figure.number + figure_2.number > figure2_figureX
+            && figure.number + figure_2.number > figure2_figureY){
+            printf("1. circle\n\n");
+            return true;
+        }
+        return false;
+}
+
+bool intersects_figure_3(struct geometry figure,struct geometry figure_2,struct geometry figure_3)
+{
+    float figure3_figure2X, figure3_figureX, figure3_figure2Y,figure3_figureY;
+    int flag = 0;
+
+        if (figure_3.x > figure.x) {
+            figure3_figureX = figure_3.x - figure.x;
+        } else {
+            figure3_figureX = figure.x - figure_3.x;
+        }
+
+        if (figure_3.x > figure_2.x) {
+            figure3_figure2X = figure_3.x - figure_2.x;
+        } else {
+            figure3_figure2X = figure_2.x - figure_3.x;
+        }
+
+        if (figure_3.y > figure.y) {
+            figure3_figureY = figure_3.y - figure.y;
+        } else {
+            figure3_figureY = figure.y - figure_3.y;
+        }
+
+        if (figure_3.y > figure_2.y) {
+            figure3_figure2Y = figure_3.y - figure_2.y;
+        } else {
+            figure3_figure2Y = figure_2.y - figure_3.y;
+        }
+
+        printf("intersects:\n");
+
+        if (figure.number + figure_3.number > figure3_figureX
+            && figure.number + figure_3.number > figure3_figureY){
+            printf("1. circle\n");
+            flag++;
+        }
+
+        if (figure_3.number + figure_2.number > figure3_figure2X
+            && figure_3.number + figure_2.number > figure3_figure2Y){
+            printf("2. circle\n");
+            flag++;
+        }
+
+        if(flag > 0)
+            return true;
+        else    
+            return false;
 }
